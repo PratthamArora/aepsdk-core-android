@@ -63,11 +63,13 @@ internal object PushTemplateConstants {
         const val MANUAL_CAROUSEL_START_INDEX = 0
         const val FILMSTRIP_CAROUSEL_CENTER_INDEX = 1
         const val NO_CENTER_INDEX_SET = -1
+        const val INPUT_BOX_DEFAULT_REPLY_TEXT = "Reply"
         const val PRODUCT_CATALOG_START_INDEX = 0
 
         // TODO: revisit this value. should cache time be configurable rather than have a static
         // value?
-        val PUSH_NOTIFICATION_IMAGE_CACHE_EXPIRY_IN_MILLISECONDS: Long = TimeUnit.DAYS.toMillis(3) // 3 days
+        val PUSH_NOTIFICATION_IMAGE_CACHE_EXPIRY_IN_MILLISECONDS: Long =
+            TimeUnit.DAYS.toMillis(3) // 3 days
     }
 
     internal object IntentActions {
@@ -76,6 +78,7 @@ internal object PushTemplateConstants {
         const val REMIND_LATER_CLICKED = "remind_clicked"
         const val MANUAL_CAROUSEL_LEFT_CLICKED = "manual_left"
         const val MANUAL_CAROUSEL_RIGHT_CLICKED = "manual_right"
+        const val INPUT_RECEIVED = "input_received"
     }
 
     internal object IntentKeys {
@@ -113,6 +116,10 @@ internal object PushTemplateConstants {
         const val CAROUSEL_OPERATION_MODE = "carouselOperationMode"
         const val CAROUSEL_LAYOUT_TYPE = "carouselLayoutType"
         const val CAROUSEL_ITEMS = "carouselItems"
+        const val INPUT_BOX_HINT = "inputBoxHint"
+        const val INPUT_BOX_FEEDBACK_TEXT = "feedbackText"
+        const val INPUT_BOX_FEEDBACK_IMAGE = "feedbackImage"
+        const val INPUT_BOX_RECEIVER_NAME = "feedbackReceiverName"
         const val CATALOG_CTA_BUTTON_TEXT = "ctaButtonText"
         const val CATALOG_CTA_BUTTON_COLOR = "ctaButtonColor"
         const val CATALOG_CTA_BUTTON_URI = "ctaButtonUri"
@@ -164,6 +171,10 @@ internal object PushTemplateConstants {
         const val REMIND_LATER_EPOCH_TIMESTAMP = "adb_rem_ts"
         const val REMIND_LATER_DELAY_SECONDS = "adb_rem_sec"
         const val CAROUSEL_OPERATION_MODE = "adb_car_mode"
+        const val INPUT_BOX_HINT = "adb_input_txt"
+        const val INPUT_BOX_FEEDBACK_TEXT = "adb_feedback_txt"
+        const val INPUT_BOX_FEEDBACK_IMAGE = "adb_feedback_img"
+        const val INPUT_BOX_RECEIVER_NAME = "adb_input_receiver"
         const val ZERO_BEZEL_COLLAPSED_STYLE = "adb_col_style"
         const val CATALOG_CTA_BUTTON_TEXT = "adb_cta_txt"
         const val CATALOG_CTA_BUTTON_COLOR = "adb_cta_clr"

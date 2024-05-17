@@ -19,6 +19,7 @@ import com.adobe.marketing.mobile.services.Log
 import com.adobe.marketing.mobile.services.ServiceProvider
 import com.adobe.marketing.mobile.services.ui.notification.builders.AutoCarouselNotificationBuilder
 import com.adobe.marketing.mobile.services.ui.notification.builders.BasicNotificationBuilder
+import com.adobe.marketing.mobile.services.ui.notification.builders.InputBoxNotificationBuilder
 import com.adobe.marketing.mobile.services.ui.notification.builders.LegacyNotificationBuilder
 import com.adobe.marketing.mobile.services.ui.notification.builders.ManualCarouselNotificationBuilder
 import com.adobe.marketing.mobile.services.ui.notification.builders.ZeroBezelNotificationBuilder
@@ -26,6 +27,7 @@ import com.adobe.marketing.mobile.services.ui.notification.templates.AEPPushTemp
 import com.adobe.marketing.mobile.services.ui.notification.templates.AutoCarouselPushTemplate
 import com.adobe.marketing.mobile.services.ui.notification.templates.BasicPushTemplate
 import com.adobe.marketing.mobile.services.ui.notification.templates.CarouselPushTemplate
+import com.adobe.marketing.mobile.services.ui.notification.templates.InputBoxPushTemplate
 import com.adobe.marketing.mobile.services.ui.notification.templates.ManualCarouselPushTemplate
 import com.adobe.marketing.mobile.services.ui.notification.templates.ZeroBezelPushTemplate
 
@@ -66,11 +68,6 @@ object NotificationBuilder {
 
                 when (carouselPushTemplate) {
                     is AutoCarouselPushTemplate -> {
-                        Log.trace(
-                            PushTemplateConstants.LOG_TAG,
-                            SELF_TAG,
-                            "Building an auto carousel style push notification."
-                        )
                         return AutoCarouselNotificationBuilder.construct(
                             context,
                             carouselPushTemplate,
@@ -78,17 +75,26 @@ object NotificationBuilder {
                             broadcastReceiverClass
                         )
                     }
+
                     is ManualCarouselPushTemplate -> {
-                        Log.trace(
-                            PushTemplateConstants.LOG_TAG,
-                            SELF_TAG,
-                            "Building a manual carousel style push notification."
-                        )
                         return ManualCarouselNotificationBuilder.construct(
                             context,
                             carouselPushTemplate,
                             trackerActivityClass,
                             broadcastReceiverClass
+                        )
+                    }
+
+                    else -> {
+                        Log.trace(
+                            PushTemplateConstants.LOG_TAG,
+                            SELF_TAG,
+                            "Unknown carousel push template type, creating a legacy style notification."
+                        )
+                        return LegacyNotificationBuilder.construct(
+                            context,
+                            BasicPushTemplate(messageData),
+                            trackerActivityClass
                         )
                     }
                 }
@@ -103,16 +109,23 @@ object NotificationBuilder {
                 )
             }
 
+            PushTemplateType.INPUT_BOX -> {
+                return InputBoxNotificationBuilder.construct(
+                    context,
+                    InputBoxPushTemplate(messageData),
+                    trackerActivityClass,
+                    broadcastReceiverClass
+                )
+            }
+
             PushTemplateType.UNKNOWN -> {
-                val basicPushTemplate = BasicPushTemplate(messageData as MutableMap<String, String>)
                 return LegacyNotificationBuilder.construct(
                     context,
-                    basicPushTemplate,
+                    BasicPushTemplate(messageData),
                     trackerActivityClass
                 )
             }
         }
-        throw NotificationConstructionFailedException("Failed to build notification for the given push template type ${pushTemplateType.value}.")
     }
 
     @Throws(NotificationConstructionFailedException::class)
@@ -143,24 +156,36 @@ object NotificationBuilder {
             }
 
             PushTemplateType.CAROUSEL -> {
-                val pushTemplate = ManualCarouselPushTemplate(intent)
                 return ManualCarouselNotificationBuilder.construct(
                     context,
-                    pushTemplate,
+                    ManualCarouselPushTemplate(intent),
+                    trackerActivityClass,
+                    broadcastReceiverClass
+                )
+            }
+
+            PushTemplateType.INPUT_BOX -> {
+                return InputBoxNotificationBuilder.construct(
+                    context,
+                    InputBoxPushTemplate(intent),
                     trackerActivityClass,
                     broadcastReceiverClass
                 )
             }
 
             PushTemplateType.UNKNOWN -> {
-                val basicPushTemplate = BasicPushTemplate(intent)
                 return LegacyNotificationBuilder.construct(
                     context,
-                    basicPushTemplate,
+                    BasicPushTemplate(intent),
                     trackerActivityClass
                 )
             }
         }
-        throw NotificationConstructionFailedException("Failed to build notification for the given intent with push template type ${pushTemplateType.value}.")
+        // default to legacy notification
+        return LegacyNotificationBuilder.construct(
+            context,
+            BasicPushTemplate(intent),
+            trackerActivityClass
+        )
     }
 }

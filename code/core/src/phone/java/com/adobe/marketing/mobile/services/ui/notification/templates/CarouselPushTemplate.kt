@@ -48,11 +48,13 @@ internal open class CarouselPushTemplate : AEPPushTemplate {
     protected constructor(data: Map<String, String>) : super(data) {
         carouselLayoutType = DataReader.optString(
             data, PushTemplateConstants.PushPayloadKeys.CAROUSEL_LAYOUT, null
-        ) ?: throw IllegalArgumentException("Required field \"${PushTemplateConstants.PushPayloadKeys.CAROUSEL_LAYOUT}\" not found.")
+        )
+            ?: throw IllegalArgumentException("Required field \"${PushTemplateConstants.PushPayloadKeys.CAROUSEL_LAYOUT}\" not found.")
 
         rawCarouselItems = DataReader.optString(
             data, PushTemplateConstants.PushPayloadKeys.CAROUSEL_ITEMS, null
-        ) ?: throw IllegalArgumentException("Required field \"${PushTemplateConstants.PushPayloadKeys.CAROUSEL_ITEMS}\" not found.")
+        )
+            ?: throw IllegalArgumentException("Required field \"${PushTemplateConstants.PushPayloadKeys.CAROUSEL_ITEMS}\" not found.")
 
         carouselOperationMode = DataReader.optString(
             data,
